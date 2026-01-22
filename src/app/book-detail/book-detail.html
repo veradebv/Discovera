@@ -1,3 +1,4 @@
+<button (click)="goBack()">← Back to Discover</button>
 @if (book) {
     <h2>{{ book.title }}</h2>
     <p> {{ book.author }}</p>
@@ -9,6 +10,31 @@
     <button (click)="setStatus('want-to-read')">Want to Read</button>
     <button (click)="setStatus('reading')">Reading</button>
     <button (click)="setStatus('read')">Read</button>
+
+    <hr />
+
+    <h3>Reviews</h3>
+
+    <textarea
+    [(ngModel)]="newReview"
+    placeholder="Write your review..."
+    rows="3"
+  ></textarea>
+  <button (click)="addReview()">Submit Review</button>
+
+  @if (book.reviews?.length) {
+    <ul>
+      @for (review of book.reviews; track review.createdAt) {
+        <li>
+          {{ review.text }}
+          <br/>
+          <small>{{ review.createdAt | date: 'short' }}</small>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p>No reviews yet.</p>
+  }
 } @else {
     <p>Book not found.</p>
 }
