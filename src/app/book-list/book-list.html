@@ -8,6 +8,10 @@
       </a><br />
       <span>by {{ book.author }}</span><br />
       <small>⭐ {{ book.rating }}</small>
+
+      @if (book.status) {
+        <em>Status: {{ book.status }}</em>
+      }
     </li>
   }
 </ul>
