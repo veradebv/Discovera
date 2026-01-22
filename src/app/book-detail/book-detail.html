@@ -2,6 +2,13 @@
     <h2>{{ book.title }}</h2>
     <p> {{ book.author }}</p>
     <p> ⭐ {{ book.rating }}</p>
+
+    <h3>Reading Status</h3>
+    <p>Current: {{ book.status }}</p>
+
+    <button (click)="setStatus('want-to-read')">Want to Read</button>
+    <button (click)="setStatus('reading')">Reading</button>
+    <button (click)="setStatus('read')">Read</button>
 } @else {
     <p>Book not found.</p>
 }
