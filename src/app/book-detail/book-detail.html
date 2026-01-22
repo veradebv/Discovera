@@ -1,2 +1,7 @@
-<h2>Book Detail</h2>
-<p>Book ID: {{ bookId }}</p>
+@if (book) {
+    <h2>{{ book.title }}</h2>
+    <p> {{ book.author }}</p>
+    <p> ⭐ {{ book.rating }}</p>
+} @else {
+    <p>Book not found.</p>
+}
