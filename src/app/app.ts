@@ -1,11 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { CounterComponent } from './counter/counter';
+import { BookListComponent } from './book-list/book-list';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CounterComponent], // 👈 allow counter
+  imports: [BookListComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
