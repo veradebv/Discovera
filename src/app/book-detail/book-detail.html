@@ -22,7 +22,7 @@
   ></textarea>
   <button (click)="addReview()">Submit Review</button>
 
-  @if (book.reviews?.length) {
+  @if (book.reviews.length) {
     <ul>
       @for (review of book.reviews; track review.createdAt) {
         <li>

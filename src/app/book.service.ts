@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export type ReadingStatus = 'want-to-read' | 'reading' | 'read';
 
@@ -22,13 +23,18 @@ export interface Book {
 export class BookService {
   private readonly STORAGE_KEY = 'discovera_books';
 
-  private books: Book[] = this.loadBooks();
+  private books: Book[] = [];
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.books = this.loadBooks();
+  }
 
   private loadBooks(): Book[] {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-
-    if (stored) {
-      return JSON.parse(stored);
+    if (isPlatformBrowser(this.platformId)) {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
     }
 
     return [
@@ -38,7 +44,7 @@ export class BookService {
         author: 'Matt Haig',
         rating: 4.2,
         status: 'want-to-read',
-        reviews: []
+        reviews: [],
       },
       {
         id: 1,
@@ -46,7 +52,7 @@ export class BookService {
         author: 'James Clear',
         rating: 4.5,
         status: 'reading',
-        reviews: []
+        reviews: [],
       },
       {
         id: 2,
@@ -54,13 +60,15 @@ export class BookService {
         author: 'Haruki Murakami',
         rating: 4.0,
         status: 'read',
-        reviews: []
+        reviews: [],
       },
     ];
   }
 
   private saveBooks() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.books));
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.books));
+    }
   }
 
   getBooks(): Book[] {
@@ -90,5 +98,4 @@ export class BookService {
 
     this.saveBooks();
   }
-
 }
