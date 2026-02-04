@@ -12,7 +12,7 @@
 <ul>
   @for (book of filteredBooks; track book.id) {
     <li>
-      <a [routerLink]="['/books', book.id]">
+      <a [routerLink]="['books', book.id]">
       <strong>{{ book.title }}</strong>
       </a><br />
       <span>by {{ book.author }}</span><br />
