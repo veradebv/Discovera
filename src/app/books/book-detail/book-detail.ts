@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BookService, Book, ReadingStatus } from '../book.service';
+import { BookService, Book, ReadingStatus } from '../../book.service';
 
 @Component({
   selector: 'app-book-detail',

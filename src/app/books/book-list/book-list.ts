@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { BookService, Book, ReadingStatus } from '../book.service';
+import { BookService, Book, ReadingStatus } from '../../book.service';
 
 type FilterStatus = ReadingStatus | 'all';
 

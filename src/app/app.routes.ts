@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
-import { BookListComponent } from './book-list/book-list';
-import { BookDetailComponent } from './book-detail/book-detail';
+import { BookListComponent } from './books/book-list/book-list';
+import { BookDetailComponent } from './books/book-detail/book-detail';
 
 export const routes: Routes = [
-    { path: '', component: BookListComponent },
-    { path: 'books/:id', component: BookDetailComponent }
+    {
+        path: '',
+        loadChildren: () => 
+            import('./books/book.router').then(m => m.BOOKS_ROUTES)
+    }
 ];
