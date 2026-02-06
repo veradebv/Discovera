@@ -1,5 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 
 export type ReadingStatus = 'want-to-read' | 'reading' | 'read';
 
@@ -23,10 +24,13 @@ export interface Book {
 export class BookService {
   private readonly STORAGE_KEY = 'discovera_books';
 
-  private books: Book[] = [];
+  private booksSubject: BehaviorSubject<Book[]> = new BehaviorSubject<Book[]>([]);
+
+  books$ = this.booksSubject.asObservable();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.books = this.loadBooks();
+    const initialBooks = this.loadBooks();
+    this.booksSubject.next(initialBooks);
   }
 
   private loadBooks(): Book[] {
@@ -65,37 +69,39 @@ export class BookService {
     ];
   }
 
-  private saveBooks() {
+  private saveBooks(books: Book[]) {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.books));
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(books));
     }
   }
 
-  getBooks(): Book[] {
-    return this.books;
-  }
-
   getBookById(id: number): Book | undefined {
-    return this.books.find(book => book.id === id);
+    return this.booksSubject.value.find(book => book.id === id);
   }
 
   updateStatus(id: number, status: ReadingStatus) {
-    const book = this.books.find(book => book.id === id);
-    if (!book) return;
+    const books = this.booksSubject.value.map(book =>
+      book.id === id ? { ...book, status } : book
+    );
 
-    book.status = status;
-    this.saveBooks();
+    this.booksSubject.next(books);
+    this.saveBooks(books);
   }
 
+
   addReview(bookId: number, text: string) {
-    const book = this.books.find(b => b.id === bookId);
-    if (!book) return;
-
-    book.reviews.push({
-      text,
-      createdAt: new Date(),
-    });
-
-    this.saveBooks();
+    const books = this.booksSubject.value.map(book =>
+      book.id === bookId
+        ? {
+            ...book,
+            reviews: [
+              ...book.reviews,
+              { text, createdAt: new Date() },
+            ],
+          }
+        : book
+    );
+    this.booksSubject.next(books);
+    this.saveBooks(books);
   }
 }
