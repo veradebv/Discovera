@@ -1,11 +1,14 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 /**
  * Layout Component
  * Provides the main application shell with header, main content area, and footer
  * Using OnPush change detection for optimal performance
+ * 
+ * Displays authenticated user info and logout button
  * @Component marks this class as an Angular component
  */
 @Component({
@@ -17,6 +20,12 @@ import { RouterModule } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
-  // Layout component is primarily presentational
-  // No complex logic needed here - follows SRP principle
+  private readonly authService = inject(AuthService);
+
+  // Observable for current user
+  currentUser$ = this.authService.currentUser$;
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

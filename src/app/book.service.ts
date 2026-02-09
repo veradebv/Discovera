@@ -14,6 +14,8 @@ export interface Book {
   title: string;
   author: string;
   rating: number;
+  /** Optional URL to a cover image */
+  image?: string;
   status?: ReadingStatus;
   reviews: Review[];
 }
@@ -61,6 +63,7 @@ export class BookService {
         title: 'The Midnight Library',
         author: 'Matt Haig',
         rating: 4.2,
+        image: 'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=5b3a5b4b8c7a9d1f9e3f0a0f6e6a7b8c',
         status: 'want-to-read',
         reviews: [],
       },
@@ -69,6 +72,7 @@ export class BookService {
         title: 'Atomic Habits',
         author: 'James Clear',
         rating: 4.5,
+        image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7g8h9i0j',
         status: 'reading',
         reviews: [],
       },
@@ -77,6 +81,7 @@ export class BookService {
         title: 'Norwegian Wood',
         author: 'Haruki Murakami',
         rating: 4.0,
+        image: 'https://images.unsplash.com/photo-1473862171294-34a8d7c4d1f8?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdef1234567890',
         status: 'read',
         reviews: [],
       },

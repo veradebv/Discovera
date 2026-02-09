@@ -1,9 +1,22 @@
 <header>
   <div class="header-container">
     <h1 class="logo">📚 Discovera</h1>
-    <nav>
+    <nav class="nav-menu">
       <a href="/" class="hover:opacity-80">Books</a>
       <a href="/about" class="hover:opacity-80">About</a>
+
+      @let user = (currentUser$ | async);
+      @if (user !== null && user !== undefined) {
+        <div class="user-menu">
+          <span class="welcome-text">Welcome, {{ user.username }}!</span>
+          <button
+            (click)="logout()"
+            class="logout-btn"
+          >
+            Logout
+          </button>
+        </div>
+      }
     </nav>
   </div>
 </header>
@@ -21,3 +34,4 @@
     <a href="https://github.com" target="_blank">GitHub</a>
   </div>
 </footer>
+

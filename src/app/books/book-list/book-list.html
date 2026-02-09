@@ -45,22 +45,32 @@
     @if (filteredList.length > 0) {
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (book of filteredList; track book.id) {
-          <li class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-blue-500">
-            <a
-              [routerLink]="['books', book.id]"
-              class="block no-underline hover:text-blue-600"
-            >
-              <strong class="text-lg block mb-2">{{ book.title }}</strong>
+          <li class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-blue-500 flex gap-4 items-start">
+            <a [routerLink]="['books', book.id]" class="block no-underline hover:text-blue-600">
+              <img
+                src="{{ book.image || 'https://via.placeholder.com/120x160?text=No+Cover' }}"
+                alt="{{ book.title }} cover"
+                class="book-thumbnail w-28 h-36 object-cover rounded-md mr-4"
+              />
             </a>
-            <span class="text-gray-600 block mb-2">by {{ book.author }}</span>
-            <small class="text-yellow-500 block mb-2">⭐ {{ book.rating | number: '1.1-1' }}</small>
 
-            @if (book.status) {
-              <em class="text-sm text-gray-500 block">Status: {{ book.status }}</em>
-            }
+            <div class="flex-1">
+              <a
+                [routerLink]="['books', book.id]"
+                class="block no-underline hover:text-blue-600"
+              >
+                <strong class="text-lg block mb-2">{{ book.title }}</strong>
+              </a>
+              <span class="text-gray-600 block mb-2">by {{ book.author }}</span>
+              <small class="text-yellow-500 block mb-2">⭐ {{ book.rating | number: '1.1-1' }}</small>
 
-            <div class="mt-2 text-xs text-gray-400">
-              {{ book.reviews.length }} review(s)
+              @if (book.status) {
+                <em class="text-sm text-gray-500 block">Status: {{ book.status }}</em>
+              }
+
+              <div class="mt-2 text-xs text-gray-400">
+                {{ book.reviews.length }} review(s)
+              </div>
             </div>
           </li>
         }
