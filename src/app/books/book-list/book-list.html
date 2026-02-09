@@ -1,26 +1,72 @@
-<h2>Discover Books</h2>
+<div class="p-6">
+  <h1 class="text-3xl font-bold mb-6">Discovera - Book Reviews</h1>
 
-<div>
-  <button (click)="setFilter('all')">All</button>
-  <button (click)="setFilter('want-to-read')">Want to Read</button>
-  <button (click)="setFilter('reading')">Reading</button>
-  <button (click)="setFilter('read')">Read</button>
-</div>
+  <div class="mb-6">
+    <input
+      type="text"
+      placeholder="Search books by title or author..."
+      #searchInput
+      (input)="setSearch(searchInput.value)"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
 
-<hr/>
+  <div class="space-x-2 mb-6">
+    <button
+      (click)="setFilter('all')"
+      class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+    >
+      All
+    </button>
+    <button
+      (click)="setFilter('want-to-read')"
+      class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+    >
+      Want to Read
+    </button>
+    <button
+      (click)="setFilter('reading')"
+      class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+    >
+      Reading
+    </button>
+    <button
+      (click)="setFilter('read')"
+      class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+    >
+      Read
+    </button>
+  </div>
 
-<ul>
-  @for (book of filteredBooks; track book.id) {
-    <li>
-      <a [routerLink]="['books', book.id]">
-      <strong>{{ book.title }}</strong>
-      </a><br />
-      <span>by {{ book.author }}</span><br />
-      <small>⭐ {{ book.rating }}</small>
+  <hr class="my-6" />
 
-      @if (book.status) {
-        <em>Status: {{ book.status }}</em>
-      }
-    </li>
+  @let filteredList = (filteredBooks$ | async);
+  @if (filteredList !== null) {
+    @if (filteredList.length > 0) {
+      <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (book of filteredList; track book.id) {
+          <li class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-blue-500">
+            <a
+              [routerLink]="['books', book.id]"
+              class="block no-underline hover:text-blue-600"
+            >
+              <strong class="text-lg block mb-2">{{ book.title }}</strong>
+            </a>
+            <span class="text-gray-600 block mb-2">by {{ book.author }}</span>
+            <small class="text-yellow-500 block mb-2">⭐ {{ book.rating | number: '1.1-1' }}</small>
+
+            @if (book.status) {
+              <em class="text-sm text-gray-500 block">Status: {{ book.status }}</em>
+            }
+
+            <div class="mt-2 text-xs text-gray-400">
+              {{ book.reviews.length }} review(s)
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="text-center text-gray-500 py-8">No books found matching your search.</p>
+    }
   }
-</ul>
+</div>

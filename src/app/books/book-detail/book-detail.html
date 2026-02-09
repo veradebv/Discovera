@@ -1,40 +1,82 @@
-<button (click)="goBack()">← Back to Discover</button>
-@if (book) {
-    <h2>{{ book.title }}</h2>
-    <p> {{ book.author }}</p>
-    <p> ⭐ {{ book.rating }}</p>
+<div class="p-6 max-w-2xl mx-auto">
+  <button
+    (click)="goBack()"
+    class="mb-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+  >
+    ← Back to Discover
+  </button>
 
-    <h3>Reading Status</h3>
-    <p>Current: {{ book.status }}</p>
+  @let book = (book$ | async);
+  @if (book) {
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <h2 class="text-3xl font-bold mb-2">{{ book.title }}</h2>
+      <p class="text-lg text-gray-600 mb-4">by {{ book.author }}</p>
+      <p class="text-2xl text-yellow-500 mb-6">⭐ {{ book.rating | number: '1.1-1' }}</p>
 
-    <button (click)="setStatus('want-to-read')">Want to Read</button>
-    <button (click)="setStatus('reading')">Reading</button>
-    <button (click)="setStatus('read')">Read</button>
+      <hr class="my-6" />
 
-    <hr />
+      <h3 class="text-2xl font-bold mb-4">Reading Status</h3>
+      <p class="mb-4 text-gray-700">
+        Current:
+        <span class="font-semibold">{{ book.status || 'Not specified' }}</span>
+      </p>
 
-    <h3>Reviews</h3>
+      <div class="space-x-2 space-y-2 mb-6">
+        <button
+          (click)="setStatus('want-to-read')"
+          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >
+          Want to Read
+        </button>
+        <button
+          (click)="setStatus('reading')"
+          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+        >
+          Reading
+        </button>
+        <button
+          (click)="setStatus('read')"
+          class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition"
+        >
+          Read
+        </button>
+      </div>
 
-    <textarea
-    [(ngModel)]="newReview"
-    placeholder="Write your review..."
-    rows="3"
-  ></textarea>
-  <button (click)="addReview()">Submit Review</button>
+      <hr class="my-6" />
 
-  @if (book.reviews.length) {
-    <ul>
-      @for (review of book.reviews; track review.createdAt) {
-        <li>
-          {{ review.text }}
-          <br/>
-          <small>{{ review.createdAt | date: 'short' }}</small>
-        </li>
+      <h3 class="text-2xl font-bold mb-4">Reviews</h3>
+
+      <div class="mb-6">
+        <textarea
+          [(ngModel)]="newReview"
+          placeholder="Write your review..."
+          rows="3"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        ></textarea>
+        <button
+          (click)="addReview(book)"
+          class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >
+          Submit Review
+        </button>
+      </div>
+
+      @if (book.reviews.length) {
+        <ul class="space-y-4">
+          @for (review of book.reviews; track review.createdAt) {
+            <li class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p class="text-gray-800">{{ review.text }}</p>
+              <small class="text-gray-500 block mt-2">
+                {{ review.createdAt | date: 'medium' }}
+              </small>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="text-gray-500 italic">No reviews yet. Be the first to review!</p>
       }
-    </ul>
+    </div>
   } @else {
-    <p>No reviews yet.</p>
+    <p class="text-center text-gray-500 py-8 text-lg">Book not found.</p>
   }
-} @else {
-    <p>Book not found.</p>
-}
+</div>

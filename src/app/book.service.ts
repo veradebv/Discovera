@@ -33,6 +33,20 @@ export class BookService {
     this.booksSubject.next(initialBooks);
   }
 
+  /**
+   * Get all books as an observable (reactive approach)
+   * Use with async pipe in templates: books$ | async
+   */
+  getBooks$ = () => this.books$;
+
+  /**
+   * Get all books synchronously (snapshot)
+   * Returns current value from BehaviorSubject
+   */
+  getBooks(): Book[] {
+    return this.booksSubject.value;
+  }
+
   private loadBooks(): Book[] {
     if (isPlatformBrowser(this.platformId)) {
       const stored = localStorage.getItem(this.STORAGE_KEY);
