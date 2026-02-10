@@ -6,18 +6,6 @@
       <p class="bm-subtitle">Join the reading ledger and share your notes.</p>
     </div>
 
-    @if (error) {
-      <div class="bm-alert bm-alert-error">
-        <p>{{ error }}</p>
-      </div>
-    }
-
-    @if (successMessage) {
-      <div class="bm-alert bm-alert-success">
-        <p>{{ successMessage }}</p>
-      </div>
-    }
-
     <form (ngSubmit)="onRegister()" class="bm-form">
       <label>
         <span>Email Address</span>

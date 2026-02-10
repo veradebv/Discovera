@@ -1,0 +1,11 @@
+@let toasts = (toasts$ | async);
+@if (toasts && toasts.length > 0) {
+  <div class="bm-toast-wrap" aria-live="polite" aria-atomic="true">
+    @for (toast of toasts; track toast.id) {
+      <div class="bm-toast bm-toast-{{ toast.type }}">
+        <span>{{ toast.message }}</span>
+        <button type="button" (click)="dismiss(toast.id)" aria-label="Dismiss">×</button>
+      </div>
+    }
+  </div>
+}

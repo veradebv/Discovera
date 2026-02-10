@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 
 /**
  * User type for auth system
@@ -10,6 +10,11 @@ export interface User {
   id: string;
   email: string;
   username: string;
+}
+
+interface RegisterResponse {
+  accessToken: string;
+  user: User;
 }
 
 /**
@@ -29,6 +34,8 @@ export interface User {
 export class AuthService {
   private readonly STORAGE_KEY = 'discovera_auth';
   private readonly USERS_KEY = 'discovera_users';
+  private readonly TOKEN_KEY = 'discovera_token';
+  private readonly API_BASE_URL = 'http://localhost:3000';
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -37,7 +44,10 @@ export class AuthService {
     map(user => user !== null)
   );
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     // Load user from localStorage on service init
     // This must be done in constructor, not field initializer, so platformId is available
     const savedUser = this.loadUser();
@@ -54,47 +64,31 @@ export class AuthService {
    * Validates email and password, stores encrypted (in real app, use backend)
    */
   register(email: string, username: string, password: string): Observable<{ success: boolean; message: string }> {
-    return new Observable(observer => {
-      // Validation
-      if (!email || !username || !password) {
-        observer.next({ success: false, message: 'All fields are required' });
-        observer.complete();
-        return;
-      }
+    // Basic client-side validation
+    if (!email || !username || !password) {
+      return of({ success: false, message: 'All fields are required' });
+    }
 
-      if (password.length < 6) {
-        observer.next({ success: false, message: 'Password must be at least 6 characters' });
-        observer.complete();
-        return;
-      }
+    if (password.length < 6) {
+      return of({ success: false, message: 'Password must be at least 6 characters' });
+    }
 
-      const users = this.getAllUsers();
-      const userExists = users.some(u => u.email === email || u.username === username);
+    const payload = { email, username, password };
 
-      if (userExists) {
-        observer.next({ success: false, message: 'Email or username already exists' });
-        observer.complete();
-        return;
-      }
-
-      // Create new user (in real app, hash password on backend)
-      const newUser: User = {
-        id: this.generateId(),
-        email,
-        username,
-      };
-
-      // Store user and password (in real app, send to backend)
-      const updatedUsers = [...users, { ...newUser, password }];
-      this.saveUsers(updatedUsers);
-
-      // Auto-login after registration
-      this.saveUserSession(newUser);
-      this.currentUserSubject.next(newUser);
-
-      observer.next({ success: true, message: 'Registration successful!' });
-      observer.complete();
-    });
+    return this.http
+      .post<RegisterResponse>(`${this.API_BASE_URL}/auth/register`, payload)
+      .pipe(
+        tap((response) => {
+          this.saveUserSession(response.user);
+          this.saveToken(response.accessToken);
+          this.currentUserSubject.next(response.user);
+        }),
+        map(() => ({ success: true, message: 'Registration successful!' })),
+        catchError((error: HttpErrorResponse) => {
+          const message = this.parseErrorMessage(error);
+          return of({ success: false, message });
+        })
+      );
   }
 
   /**
@@ -170,6 +164,12 @@ export class AuthService {
     }
   }
 
+  private saveToken(token: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.TOKEN_KEY, token);
+    }
+  }
+
   private getAllUsers(): User[] {
     if (isPlatformBrowser(this.platformId)) {
       const stored = localStorage.getItem(this.USERS_KEY);
@@ -205,5 +205,30 @@ export class AuthService {
       };
       this.saveUsers([demoUser]);
     }
+  }
+
+  private parseErrorMessage(error: HttpErrorResponse): string {
+    if (error.status === 0) {
+      return 'Network error. Please check your connection and try again.';
+    }
+
+    const backendMessage = error?.error?.message;
+    if (Array.isArray(backendMessage) && backendMessage.length > 0) {
+      return backendMessage.join(' ');
+    }
+
+    if (typeof backendMessage === 'string' && backendMessage.trim().length > 0) {
+      return backendMessage;
+    }
+
+    if (error.status === 400 || error.status === 409) {
+      return 'Registration failed. Please check your details and try again.';
+    }
+
+    if (error.status >= 500) {
+      return 'Server error. Please try again in a moment.';
+    }
+
+    return 'Something went wrong, try again.';
   }
 }

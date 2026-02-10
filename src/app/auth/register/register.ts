@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { ToastService } from '../../shared/toast/toast.service';
 
 /**
  * Register Component
@@ -20,39 +21,34 @@ import { AuthService } from '../auth.service';
 export class RegisterComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
 
   email = '';
   username = '';
   password = '';
   confirmPassword = '';
   loading = false;
-  error = '';
-  successMessage = '';
-
   onRegister(): void {
-    this.error = '';
-    this.successMessage = '';
-
     // Validation
     if (!this.email || !this.username || !this.password || !this.confirmPassword) {
-      this.error = 'Please fill in all fields';
+      this.toastService.show('Please fill in all fields', 'error');
       return;
     }
 
     if (this.password !== this.confirmPassword) {
-      this.error = 'Passwords do not match';
+      this.toastService.show('Passwords do not match', 'error');
       return;
     }
 
     if (this.password.length < 6) {
-      this.error = 'Password must be at least 6 characters';
+      this.toastService.show('Password must be at least 6 characters', 'error');
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email)) {
-      this.error = 'Please enter a valid email';
+      this.toastService.show('Please enter a valid email', 'error');
       return;
     }
 
@@ -65,18 +61,18 @@ export class RegisterComponent {
         next: (result) => {
           this.loading = false;
           if (result.success) {
-            this.successMessage = result.message;
+            this.toastService.show(result.message, 'success');
             // Redirect to books after successful registration
             setTimeout(() => {
               this.router.navigate(['/']);
             }, 500);
           } else {
-            this.error = result.message;
+            this.toastService.show(result.message, 'error');
           }
         },
         error: (err) => {
           this.loading = false;
-          this.error = 'An error occurred. Please try again.';
+          this.toastService.show('An error occurred. Please try again.', 'error');
         },
       });
   }
