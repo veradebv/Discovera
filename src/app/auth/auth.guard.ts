@@ -28,3 +28,28 @@ export const authGuard: CanActivateFn = (route, state) => {
     })
   );
 };
+
+/**
+ * Not Auth Guard
+ * Prevents authenticated users from accessing login/register pages
+ * Redirects to home if user is already logged in
+ * 
+ * Usage: { path: 'login', canActivate: [notAuthGuard] }
+ */
+export const notAuthGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  return authService.isAuthenticated$.pipe(
+    take(1),
+    map(isAuthenticated => {
+      if (!isAuthenticated) {
+        // User not authenticated, allow access to login/register
+        return true;
+      }
+      // User is authenticated, redirect to home
+      router.navigate(['/']);
+      return false;
+    })
+  );
+};

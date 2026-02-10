@@ -5,13 +5,13 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #667eea;
-  --secondary-color: #764ba2;
-  --background: #f9fafb;
-  --surface: #ffffff;
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --border-color: #e5e7eb;
+  --primary-color: #7a5f3c;
+  --secondary-color: #6f6257;
+  --background: #f6f3ed;
+  --surface: #fdfbf7;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6f6257;
+  --border-color: #e6e0d6;
 }
 
 * {
@@ -25,7 +25,7 @@ html, body {
   width: 100%;
   background-color: var(--background);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Georgia", "Times New Roman", serif;
   line-height: 1.6;
 }
 
@@ -71,14 +71,14 @@ button {
 input,
 textarea {
   border: 1px solid var(--border-color);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.35rem;
+  font-size: 0.95rem;
 }
 
 input:focus,
 textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(122, 95, 60, 0.12);
 }

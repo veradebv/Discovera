@@ -1,91 +1,86 @@
-<div class="p-6 max-w-2xl mx-auto">
-  <button
-    (click)="goBack()"
-    class="mb-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-  >
-    ← Back to Discover
-  </button>
+<section class="bm-page bm-container">
+  <button (click)="goBack()" class="bm-back">← Back to Discover</button>
 
   @let book = (book$ | async);
   @if (book) {
-    <div class="bg-white rounded-lg shadow-lg p-8 detail-container">
-      <div class="flex gap-6 items-start mb-6">
+    <div class="bm-detail">
+      <div class="bm-detail-header">
         <img
-          src="{{ book.image || 'https://via.placeholder.com/200x300?text=No+Cover' }}"
+          src="{{ book.image || 'https://via.placeholder.com/220x320?text=No+Cover' }}"
           alt="{{ book.title }} cover"
-          class="book-cover w-40 h-60 object-cover rounded-md"
+          class="bm-detail-cover"
         />
         <div>
-          <h2 class="text-3xl font-bold mb-2">{{ book.title }}</h2>
-          <p class="text-lg text-gray-600 mb-2">by {{ book.author }}</p>
-          <p class="text-2xl text-yellow-500 mb-2">⭐ {{ book.rating | number: '1.1-1' }}</p>
+          <h2 class="bm-detail-title">{{ book.title }}</h2>
+          <p class="bm-detail-author">{{ book.author }}</p>
+          <p class="bm-detail-rating">★ {{ book.rating | number: '1.1-1' }}</p>
         </div>
       </div>
 
-      <hr class="my-6" />
+      <hr class="bm-divider" />
 
-      <h3 class="text-2xl font-bold mb-4">Reading Status</h3>
-      <p class="mb-4 text-gray-700">
-        Current:
-        <span class="font-semibold">{{ book.status || 'Not specified' }}</span>
-      </p>
+      <section class="bm-section">
+        <h3>Reading Status</h3>
+        <p class="bm-muted">Current: <strong>{{ book.status || 'Not specified' }}</strong></p>
+        <div class="bm-filters">
+          <button (click)="setStatus('want-to-read')" class="bm-chip">Want to Read</button>
+          <button (click)="setStatus('reading')" class="bm-chip">Reading</button>
+          <button (click)="setStatus('read')" class="bm-chip">Read</button>
+        </div>
+      </section>
 
-      <div class="space-x-2 space-y-2 mb-6">
-        <button
-          (click)="setStatus('want-to-read')"
-          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-        >
-          Want to Read
-        </button>
-        <button
-          (click)="setStatus('reading')"
-          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-        >
-          Reading
-        </button>
-        <button
-          (click)="setStatus('read')"
-          class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition"
-        >
-          Read
-        </button>
-      </div>
+      <hr class="bm-divider" />
 
-      <hr class="my-6" />
+      <section class="bm-section">
+        <h3>Reviews</h3>
 
-      <h3 class="text-2xl font-bold mb-4">Reviews</h3>
+        <div class="bm-review-form">
+          <textarea
+            [(ngModel)]="newReview"
+            placeholder="Write your review..."
+            rows="3"
+            class="bm-input bm-textarea"
+          ></textarea>
+          <button (click)="addReview()" class="bm-primary">Submit Review</button>
+        </div>
 
-      <div class="mb-6">
-        <textarea
-          [(ngModel)]="newReview"
-          placeholder="Write your review..."
-          rows="3"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
-        <button
-          (click)="addReview(book)"
-          class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-        >
-          Submit Review
-        </button>
-      </div>
-
-      @if (book.reviews.length) {
-        <ul class="space-y-4">
-          @for (review of book.reviews; track review.createdAt) {
-            <li class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <p class="text-gray-800">{{ review.text }}</p>
-              <small class="text-gray-500 block mt-2">
-                {{ review.createdAt | date: 'medium' }}
-              </small>
-            </li>
-          }
-        </ul>
-      } @else {
-        <p class="text-gray-500 italic">No reviews yet. Be the first to review!</p>
-      }
+        @if (book.reviews.length) {
+          <ul class="bm-review-list">
+            @for (review of book.reviews; track review.createdAt; let reviewIndex = $index) {
+              <li class="bm-review-item">
+                <div class="bm-review-header">
+                  <img
+                    [src]="'https://ui-avatars.com/api/?name=' + review.reviewerName + '&background=7a5f3c&color=fff&size=40'"
+                    [alt]="review.reviewerName"
+                    class="bm-review-avatar"
+                  />
+                  <div>
+                    <strong class="bm-review-name">{{ review.reviewerName }}</strong>
+                    <div class="bm-review-date">{{ review.createdAt | date: 'medium' }}</div>
+                  </div>
+                  <button
+                    (click)="deleteReview(book, reviewIndex)"
+                    class="bm-delete"
+                    title="Delete review"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+                <p class="bm-review-text">{{ review.text }}</p>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="bm-empty">No reviews yet. Be the first to review!</p>
+        }
+      </section>
     </div>
   } @else {
-    <p class="text-center text-gray-500 py-8 text-lg">Book not found.</p>
+    <p class="bm-empty">Book not found.</p>
   }
-</div>
+</section>

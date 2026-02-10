@@ -6,7 +6,9 @@ export type ReadingStatus = 'want-to-read' | 'reading' | 'read';
 
 export interface Review {
   text: string;
-  createdAt: Date;
+  createdAt: string;
+  reviewerName: string;
+  reviewerAvatar?: string;
 }
 
 export interface Book {
@@ -51,9 +53,32 @@ export class BookService {
 
   private loadBooks(): Book[] {
     if (isPlatformBrowser(this.platformId)) {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored);
+      try {
+        const stored = localStorage.getItem(this.STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored) as Book[];
+          return parsed.map(book => {
+            const normalizedReviews = (book.reviews || []).map(review => ({
+              ...review,
+              reviewerName: review.reviewerName || 'Anonymous',
+              createdAt:
+                typeof review.createdAt === 'string'
+                  ? review.createdAt
+                  : new Date(review.createdAt as any).toISOString(),
+            }));
+
+            normalizedReviews.sort((a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+
+            return {
+              ...book,
+              reviews: normalizedReviews,
+            };
+          });
+        }
+      } catch {
+        // If storage is unavailable (e.g., Safari private mode), fall back to defaults
       }
     }
 
@@ -85,12 +110,34 @@ export class BookService {
         status: 'read',
         reviews: [],
       },
+      {
+        id: 3,
+        title: 'To Kill a Mockingbird',
+        author: 'Harper Lee',
+        rating: 4.0,
+        image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3',
+        status: 'want-to-read',
+        reviews: [],
+      },
+      {
+        id: 4,
+        title: 'Pride and Prejudice',
+        author: 'Jane Austen',
+        rating: 4.0,
+        image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3',
+        status: 'reading',
+        reviews: [],
+      },
     ];
   }
 
   private saveBooks(books: Book[]) {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(books));
+      try {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(books));
+      } catch {
+        // Ignore storage errors (e.g., Safari private mode)
+      }
     }
   }
 
@@ -108,15 +155,33 @@ export class BookService {
   }
 
 
-  addReview(bookId: number, text: string) {
+  addReview(bookId: number, text: string, reviewerName: string, reviewerAvatar?: string) {
     const books = this.booksSubject.value.map(book =>
       book.id === bookId
         ? {
             ...book,
             reviews: [
-              ...book.reviews,
-              { text, createdAt: new Date() },
+              { text, reviewerName, reviewerAvatar, createdAt: new Date().toISOString() },
+              ...(book.reviews || []),
             ],
+          }
+        : book
+    );
+    this.booksSubject.next(books);
+    this.saveBooks(books);
+  }
+
+  /**
+   * Delete a review by index
+   * @param bookId - Book ID containing the review
+   * @param reviewIndex - Index of the review to delete
+   */
+  deleteReview(bookId: number, reviewIndex: number) {
+    const books = this.booksSubject.value.map(book =>
+      book.id === bookId
+        ? {
+            ...book,
+            reviews: book.reviews.filter((_, index) => index !== reviewIndex),
           }
         : book
     );

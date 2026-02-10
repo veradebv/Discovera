@@ -1,37 +1,47 @@
-<header>
-  <div class="header-container">
-    <h1 class="logo">📚 Discovera</h1>
-    <nav class="nav-menu">
-      <a href="/" class="hover:opacity-80">Books</a>
-      <a href="/about" class="hover:opacity-80">About</a>
+<header class="bm-header">
+  <div class="bm-topbar">
+    <div class="bm-container bm-topbar-inner">
+      <a routerLink="/" class="bm-logo">Discovera Reviews</a>
 
       @let user = (currentUser$ | async);
       @if (user !== null && user !== undefined) {
-        <div class="user-menu">
-          <span class="welcome-text">Welcome, {{ user.username }}!</span>
-          <button
-            (click)="logout()"
-            class="logout-btn"
-          >
-            Logout
-          </button>
+        <div class="bm-user">
+          <span class="bm-user-text">Signed in as {{ user.username }}</span>
+          <button (click)="logout()" class="bm-logout">Logout</button>
         </div>
       }
-    </nav>
+    </div>
+  </div>
+
+  <div class="bm-nav">
+    <div class="bm-container bm-nav-inner">
+      <nav class="bm-links">
+        <a routerLink="/">New Books</a>
+        <a routerLink="/">Best Reviewed</a>
+        <a routerLink="/about">About</a>
+        <a routerLink="/privacy">Privacy</a>
+        <a routerLink="/terms">Terms</a>
+      </nav>
+      <div class="bm-tagline">Curated reviews, reader notes, and book discoveries.</div>
+    </div>
   </div>
 </header>
 
-<main>
+<main class="bm-main">
   <ng-content></ng-content>
 </main>
 
-<footer>
-  <p>&copy; 2025 Discovera - Discover and Review Amazing Books</p>
-  <p class="text-sm text-gray-400">Share your thoughts, find your next great read</p>
-  <div class="footer-links">
-    <a href="/privacy">Privacy Policy</a>
-    <a href="/terms">Terms of Service</a>
-    <a href="https://github.com" target="_blank">GitHub</a>
+<footer class="bm-footer">
+  <div class="bm-container bm-footer-inner">
+    <div>
+      <p class="bm-footer-title">Discovera Reviews</p>
+      <p class="bm-footer-copy">Share your thoughts, find your next great read.</p>
+    </div>
+    <div class="bm-footer-links">
+      <a routerLink="/privacy">Privacy Policy</a>
+      <a routerLink="/terms">Terms of Service</a>
+      <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
   </div>
 </footer>
 

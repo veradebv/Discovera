@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
 /**
@@ -21,11 +21,13 @@ import { AuthService } from '../auth/auth.service';
 })
 export class LayoutComponent {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   // Observable for current user
   currentUser$ = this.authService.currentUser$;
 
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

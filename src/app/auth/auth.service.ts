@@ -30,7 +30,7 @@ export class AuthService {
   private readonly STORAGE_KEY = 'discovera_auth';
   private readonly USERS_KEY = 'discovera_users';
 
-  private currentUserSubject = new BehaviorSubject<User | null>(this.loadUser());
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   public isAuthenticated$ = this.currentUser$.pipe(
@@ -39,6 +39,7 @@ export class AuthService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     // Load user from localStorage on service init
+    // This must be done in constructor, not field initializer, so platformId is available
     const savedUser = this.loadUser();
     if (savedUser) {
       this.currentUserSubject.next(savedUser);

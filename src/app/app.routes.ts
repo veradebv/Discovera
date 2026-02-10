@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth/auth.guard';
+import { authGuard, notAuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './auth/login/login';
 import { RegisterComponent } from './auth/register/register';
 
@@ -7,8 +7,8 @@ import { RegisterComponent } from './auth/register/register';
  * App Routes Configuration
  *
  * Authentication Flow:
- * - /login: Public route for user login
- * - /register: Public route for new user registration
+ * - /login: Public route for user login (notAuthGuard prevents logged-in users)
+ * - /register: Public route for new user registration (notAuthGuard prevents logged-in users)
  * - /: Books feature (protected by authGuard)
  *
  * Lazy Loading: Books feature module is loaded on demand
@@ -23,10 +23,12 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [notAuthGuard]
   },
   {
     path: 'register',
     component: RegisterComponent,
+    canActivate: [notAuthGuard]
   },
   {
     path: '',
