@@ -3,7 +3,10 @@
 <header class="bm-header">
   <div class="bm-topbar">
     <div class="bm-container bm-topbar-inner">
-      <a routerLink="/" class="bm-logo">Discovera Reviews</a>
+      <a routerLink="/" class="bm-logo">
+        <span class="bm-logo-icon" aria-hidden="true">📚</span>
+        <span>Readly</span>
+      </a>
 
       @let user = (currentUser$ | async);
       @if (user !== null && user !== undefined) {
@@ -36,7 +39,7 @@
 <footer class="bm-footer">
   <div class="bm-container bm-footer-inner">
     <div>
-      <p class="bm-footer-title">Discovera Reviews</p>
+      <p class="bm-footer-title">Readly</p>
       <p class="bm-footer-copy">Share your thoughts, find your next great read.</p>
     </div>
     <div class="bm-footer-links">

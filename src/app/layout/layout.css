@@ -35,6 +35,14 @@
   font-size: 1.1rem;
   color: #111111;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bm-logo-icon {
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .bm-user {

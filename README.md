@@ -1,6 +1,6 @@
-# Discovera Reviews
+# Readly
 
-Discovera Reviews is a social reading web app where readers can explore books, save notes, and share reviews. The current MVP focuses on a clean, editorial UI plus an authentication flow that connects to a backend API.
+Readly is a social reading web app where readers can explore books, save notes, and share reviews. The current MVP focuses on a clean, editorial UI plus an authentication flow that connects to a backend API.
 
 ## Highlights
 - Modern Angular standalone components

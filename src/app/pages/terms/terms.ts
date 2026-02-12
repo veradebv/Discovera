@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
       <div class="prose prose-sm space-y-4">
         <h2 class="text-xl font-bold">1. Acceptance of Terms</h2>
         <p class="text-gray-700">
-          By using Discovera, you agree to these Terms of Service.
+          By using Readly, you agree to these Terms of Service.
           If you do not agree, please do not use this service.
         </p>
 

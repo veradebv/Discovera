@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
       <div class="prose prose-sm space-y-4">
         <h2 class="text-xl font-bold">Information we collect</h2>
         <p class="text-gray-700">
-          Discovera stores your book preferences and reviews locally in your browser's storage.
+          Readly stores your book preferences and reviews locally in your browser's storage.
           We do not collect personal information beyond what you explicitly provide.
         </p>
 

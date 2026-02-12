@@ -7,13 +7,13 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="p-6 max-w-2xl mx-auto">
-      <h1 class="text-3xl font-bold mb-4">About Discovera</h1>
+      <h1 class="text-3xl font-bold mb-4">About Readly</h1>
       <div class="prose prose-sm">
         <p class="text-gray-700 mb-4">
-          Welcome to <strong>Discovera</strong> - Your Personal Book Review Platform
+          Welcome to <strong>Readly</strong> - Your Personal Book Review Platform
         </p>
         <p class="text-gray-700 mb-4">
-          Discovera is a simple, elegant web application that helps you discover, track, and review books.
+          Readly is a simple, elegant web application that helps you discover, track, and review books.
           Whether you're an avid reader or just starting your reading journey, Discovera makes it easy to:
         </p>
         <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
           <li>Search through your reading list</li>
         </ul>
         <p class="text-gray-700 mb-4">
-          Built with <strong>Angular 21</strong> and modern web technologies, Discovera provides a responsive,
+          Built with <strong>Angular 21</strong> and modern web technologies, Readly provides a responsive,
           fast, and intuitive experience across all devices.
         </p>
         <p class="text-gray-700">
